@@ -9,12 +9,18 @@ const analyticsRoutes = require("./routes/analytics.routes.js");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const dotenv = require('dotenv');
+const cors = require('cors');
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 app.use(
   "/api-docs",
