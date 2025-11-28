@@ -22,21 +22,25 @@ const Hero = () => {
           <div className="icon-verified"></div>
         </div>
 
+        <div className="availability-badge">Available For Work</div>
+
         <motion.h1
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}
           className="title"
         >
-          Hi, I'm Ziad Mohamed Web Developer.
+          Hi, I&apos;m Ziad Mohamed Web Developer.
         </motion.h1>
 
         <p className="sub-title">
-          I'm a skilled web developer specializing in building modern web
+          I&apos;m a skilled web developer specializing in building modern web
           applications with React and Node.js. With a strong focus on
           performance, and user experience, I create full-stack solutions that
           are both functional and visually engaging.
         </p>
+
+        <p className="location">Egypt, Cairo</p>
 
         <div className="all-icons flex">
           <a

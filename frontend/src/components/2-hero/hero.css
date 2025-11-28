@@ -50,6 +50,21 @@ section.hero p.sub-title {
   margin-bottom: 32px;
 }
 
+section.hero .availability-badge {
+  display: inline-block;
+  background-color: rgba(36, 37, 46, 1);
+  border: 1px solid var(--border);
+  color: var(--title);
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+
+section.hero .location {
+  color: var(--subtitle);
+  margin-top: 0.8rem;
+}
+
 section.hero .all-icons {
   font-size: 1.3rem;
   gap: 1.5rem;

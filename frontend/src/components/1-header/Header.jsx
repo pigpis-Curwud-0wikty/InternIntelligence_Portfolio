@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./header.css";
 
 const Header = () => {
@@ -32,19 +33,19 @@ const Header = () => {
       <nav>
         <ul className="flex">
           <li>
-            <a href="#home">Home</a>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <a href="#projects">Articles</a>
+            <Link to="/about">About</Link>
           </li>
           <li>
-            <a href="#projects">Projects</a>
+            <Link to="/skills">Skills</Link>
           </li>
           <li>
-            <a href="#about">About</a>
+            <Link to="/portfolio">Portfolio</Link>
           </li>
           <li>
-            <a href="#contact">Contact</a>
+            <Link to="/contact">Contact</Link>
           </li>
         </ul>
       </nav>
@@ -90,45 +91,46 @@ const Header = () => {
                 Home
               </a>
             </li>
+            
             <li>
-              <a
-                href="#projects"
-                onClick={() => {
-                  setshowModal(false);
-                }}
-              >
-                Articles
-              </a>
-            </li>
-            <li>
-              <a
-                href="#projects"
-                onClick={() => {
-                  setshowModal(false);
-                }}
-              >
-                Projects
-              </a>
-            </li>
-            <li>
-              <a
-                href="#about"
+              <Link
+                to="/about"
                 onClick={() => {
                   setshowModal(false);
                 }}
               >
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#contact"
+              <Link
+                to="/skills"
+                onClick={() => {
+                  setshowModal(false);
+                }}
+              >
+                Skills
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/portfolio"
+                onClick={() => {
+                  setshowModal(false);
+                }}
+              >
+                Portfolio
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
                 onClick={() => {
                   setshowModal(false);
                 }}
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

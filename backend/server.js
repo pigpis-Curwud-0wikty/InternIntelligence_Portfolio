@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
   credentials: true
 }));
 
@@ -44,10 +44,10 @@ app.use('/api/v1/analytics', analyticsRoutes);
 connectDB();
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server is running on http://localhost:${process.env.PORT}`);
-    console.log(`API Documentation: http://localhost:${process.env.PORT}/api-docs`);
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
+  console.log(`API Documentation: http://localhost:${process.env.PORT}/api-docs`);
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
+  res.send('Hello World');
 });
