@@ -35,17 +35,28 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec, { explorer: true })
-);
-
-app.get("/api-docs.json", (req, res) => {
-    res.setHeader("Content-Type", "application/json");
-    res.send(swaggerSpec);
+// Health Check Route (No DB dependency)
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
+// Swagger Documentation
+try {
+    app.use(
+        "/api-docs",
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerSpec, { explorer: true })
+    );
+
+    app.get("/api-docs.json", (req, res) => {
+        res.setHeader("Content-Type", "application/json");
+        res.send(swaggerSpec);
+    });
+} catch (err) {
+    console.error("Swagger setup failed:", err);
+}
+
+// Routes
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/skill', skillRoutes);
 app.use('/api/v1/about', aboutRoutes);
@@ -53,8 +64,10 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/message', messageRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 
+// Connect to Database
 connectDB();
 
+// Root Route
 app.get('/', (req, res) => {
     res.send('Backend working on Vercel!');
 });
