@@ -17,14 +17,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configure CORS origins - supports both development and production
+// Configure CORS origins
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175"
 ];
 
-// Add production frontend URL if specified in environment variables
+// Add production URL from env
 if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
@@ -34,17 +34,18 @@ app.use(cors({
   credentials: true
 }));
 
-app.use("/api-docs", (req, res, next) => {
-  swaggerUi.serve(req, res, () => {
-    return swaggerUi.setup(swaggerSpec, { explorer: true })(req, res, next);
-  });
-});
-
+// -------- Swagger Docs ----------
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { explorer: true })
+);
 
 app.get("/api-docs.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(swaggerSpec);
 });
+// --------------------------------
 
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/skill', skillRoutes);
@@ -52,7 +53,6 @@ app.use('/api/v1/about', aboutRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/message', messageRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
-
 
 connectDB();
 
