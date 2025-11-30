@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { fetchSkills } from "../services/api";
 import { Code2, Sparkles, Target } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const SkillsPage = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { language } = useLanguage();
+  const { t } = useTranslation(language);
 
   useEffect(() => {
     const loadSkills = async () => {
@@ -37,23 +42,23 @@ const SkillsPage = () => {
 
   const categoryInfo = {
     frontend: {
-      title: "Frontend Development",
-      description: "Building beautiful, responsive, and interactive user interfaces",
+      title: language === 'ar' ? 'تطوير الواجهة الأمامية' : 'Frontend Development',
+      description: language === 'ar' ? 'بناء واجهات مستخدم جميلة ومتجاوبة وتفاعلية' : 'Building beautiful, responsive, and interactive user interfaces',
       color: "text-blue-500"
     },
     backend: {
-      title: "Backend Development",
-      description: "Creating robust server-side applications and APIs",
+      title: language === 'ar' ? 'تطوير الخلفية' : 'Backend Development',
+      description: language === 'ar' ? 'إنشاء تطبيقات وواجهات برمجية قوية من جانب الخادم' : 'Creating robust server-side applications and APIs',
       color: "text-green-500"
     },
     tools: {
-      title: "Tools & Technologies",
-      description: "Essential tools for modern development workflow",
+      title: language === 'ar' ? 'الأدوات والتقنيات' : 'Tools & Technologies',
+      description: language === 'ar' ? 'أدوات أساسية لسير عمل التطوير الحديث' : 'Essential tools for modern development workflow',
       color: "text-purple-500"
     },
     other: {
-      title: "Other Skills",
-      description: "Additional technologies and competencies",
+      title: language === 'ar' ? 'مهارات أخرى' : 'Other Skills',
+      description: language === 'ar' ? 'تقنيات وكفاءات إضافية' : 'Additional technologies and competencies',
       color: "text-gray-500"
     }
   };
@@ -62,7 +67,7 @@ const SkillsPage = () => {
     return (
       <div className="mt-16 pb-16 container mx-auto px-4">
         <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="animate-pulse text-subtitle text-lg">Loading skills...</div>
+          <div className="animate-pulse text-subtitle text-lg">{t('loading')}</div>
         </div>
       </div>
     );
@@ -82,10 +87,14 @@ const SkillsPage = () => {
     <div className="mt-16 pb-16 container mx-auto px-4">
       {/* Header Section */}
       <div className="text-center mb-16">
-        <p className="text-subtitle text-lg mb-4">What I Bring to the Table</p>
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">My Skills</h1>
+        <p className="text-subtitle text-lg mb-4">
+          {language === 'ar' ? 'ما أقدمه' : 'What I Bring to the Table'}
+        </p>
+        <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('mySkills')}</h1>
         <p className="text-subtitle text-lg max-w-3xl mx-auto leading-relaxed">
-          A comprehensive overview of the technologies and tools I work with to create exceptional web experiences.
+          {language === 'ar'
+            ? 'نظرة شاملة على التقنيات والأدوات التي أعمل بها لإنشاء تجارب ويب استثنائية.'
+            : 'A comprehensive overview of the technologies and tools I work with to create exceptional web experiences.'}
         </p>
       </div>
 
@@ -96,9 +105,13 @@ const SkillsPage = () => {
             <div className="flex justify-center mb-4">
               <Code2 className="text-blue-500" size={40} />
             </div>
-            <h3 className="text-xl font-bold mb-3">Modern Technologies</h3>
+            <h3 className="text-xl font-bold mb-3">
+              {language === 'ar' ? 'تقنيات حديثة' : 'Modern Technologies'}
+            </h3>
             <p className="text-subtitle text-sm">
-              Working with cutting-edge frameworks and libraries to build scalable applications
+              {language === 'ar'
+                ? 'العمل مع أحدث الأطر والمكتبات لبناء تطبيقات قابلة للتوسع'
+                : 'Working with cutting-edge frameworks and libraries to build scalable applications'}
             </p>
           </div>
 
@@ -106,9 +119,13 @@ const SkillsPage = () => {
             <div className="flex justify-center mb-4">
               <Sparkles className="text-purple-500" size={40} />
             </div>
-            <h3 className="text-xl font-bold mb-3">Continuous Learning</h3>
+            <h3 className="text-xl font-bold mb-3">
+              {language === 'ar' ? 'التعلم المستمر' : 'Continuous Learning'}
+            </h3>
             <p className="text-subtitle text-sm">
-              Always expanding my skill set and staying updated with industry best practices
+              {language === 'ar'
+                ? 'دائماً أوسع مجموعة مهاراتي وأبقى محدثاً بأفضل ممارسات الصناعة'
+                : 'Always expanding my skill set and staying updated with industry best practices'}
             </p>
           </div>
 
@@ -116,9 +133,13 @@ const SkillsPage = () => {
             <div className="flex justify-center mb-4">
               <Target className="text-green-500" size={40} />
             </div>
-            <h3 className="text-xl font-bold mb-3">Practical Experience</h3>
+            <h3 className="text-xl font-bold mb-3">
+              {language === 'ar' ? 'خبرة عملية' : 'Practical Experience'}
+            </h3>
             <p className="text-subtitle text-sm">
-              Hands-on experience through real-world projects and freelance work
+              {language === 'ar'
+                ? 'خبرة عملية من خلال مشاريع حقيقية وعمل حر'
+                : 'Hands-on experience through real-world projects and freelance work'}
             </p>
           </div>
         </div>
@@ -127,8 +148,10 @@ const SkillsPage = () => {
       {/* Skills by Category */}
       <section className="mb-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Technical Skills</h2>
-          <p className="text-subtitle">Organized by category for easy navigation</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('technicalSkills')}</h2>
+          <p className="text-subtitle">
+            {language === 'ar' ? 'منظمة حسب الفئة لسهولة التصفح' : 'Organized by category for easy navigation'}
+          </p>
         </div>
 
         {Object.entries(groupedSkills).map(([category, categorySkills]) => (
@@ -168,7 +191,7 @@ const SkillsPage = () => {
 
         {skills.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-subtitle">No skills found.</p>
+            <p className="text-subtitle">{t('noData')}</p>
           </div>
         )}
       </section>
@@ -176,24 +199,27 @@ const SkillsPage = () => {
       {/* Skills Summary */}
       <section className="max-w-4xl mx-auto">
         <div className="bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Collaborate</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            {language === 'ar' ? 'جاهز للتعاون' : 'Ready to Collaborate'}
+          </h2>
           <p className="text-subtitle mb-6 leading-relaxed">
-            With this diverse skill set, I'm ready to tackle challenging projects and contribute to innovative solutions.
-            Let's work together to bring your ideas to life!
+            {language === 'ar'
+              ? 'مع هذه المجموعة المتنوعة من المهارات، أنا مستعد لمواجهة المشاريع الصعبة والمساهمة في حلول مبتكرة. دعنا نعمل معاً لتحقيق أفكارك!'
+              : 'With this diverse skill set, I\'m ready to tackle challenging projects and contribute to innovative solutions. Let\'s work together to bring your ideas to life!'}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/portfolio"
+            <Link
+              to="/portfolio"
               className="px-6 py-3 bg-accent text-primary rounded-full font-medium hover:scale-105 transition-all"
             >
-              View My Projects
-            </a>
-            <a
-              href="/contact"
+              {t('viewAllProjects')}
+            </Link>
+            <Link
+              to="/contact"
               className="px-6 py-3 bg-secondary border border-border text-foreground rounded-full font-medium hover:border-accent transition-all"
             >
-              Get in Touch
-            </a>
+              {t('getInTouch')}
+            </Link>
           </div>
         </div>
       </section>

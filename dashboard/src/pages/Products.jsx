@@ -15,13 +15,15 @@ import './Products.css';
 
 const initialForm = {
   title: '',
-  description: '',
+  descriptionEn: '',
+  descriptionAr: '',
   tech: '',
   github: '',
   demo: '',
   featured: false,
   imageUrl: '',
   imageFile: null,
+  additionalImages: [],
 };
 
 const Products = () => {
@@ -56,13 +58,15 @@ const Products = () => {
       setEditingProduct(product);
       setFormData({
         title: product.title,
-        description: product.description,
+        descriptionEn: product.description?.en || product.description || '',
+        descriptionAr: product.description?.ar || '',
         tech: product.tech?.join(', ') || '',
         github: product.github || '',
         demo: product.demo || '',
         featured: product.featured || false,
         imageUrl: product.image || '',
         imageFile: null,
+        additionalImages: [],
       });
     } else {
       setEditingProduct(null);
@@ -85,7 +89,8 @@ const Products = () => {
   const buildPayload = () => {
     const payload = new FormData();
     payload.append('title', formData.title);
-    payload.append('description', formData.description);
+    payload.append('descriptionEn', formData.descriptionEn);
+    payload.append('descriptionAr', formData.descriptionAr);
     payload.append('github', formData.github);
     payload.append('demo', formData.demo);
     payload.append('featured', formData.featured);
@@ -106,6 +111,12 @@ const Products = () => {
       payload.append('image', formData.imageFile);
     } else if (formData.imageUrl) {
       payload.append('image', formData.imageUrl);
+    }
+
+    if (formData.additionalImages && formData.additionalImages.length > 0) {
+      Array.from(formData.additionalImages).forEach((file) => {
+        payload.append('additionalImages', file);
+      });
     }
 
     return payload;
@@ -192,7 +203,8 @@ const Products = () => {
                   <div className="product-card__header">
                     <div>
                       <h3>{product.title}</h3>
-                      <p>{product.description}</p>
+                      <p className="text-sm text-gray-500 mb-1">{product.description?.en || product.description}</p>
+                      <p className="text-sm text-gray-500 font-arabic" dir="rtl">{product.description?.ar}</p>
                     </div>
                     <div className="product-card__actions">
                       <button className="icon-btn" onClick={() => openModal(product)}>
@@ -279,13 +291,25 @@ const Products = () => {
                   />
                 </div>
                 <div className="form-group full">
-                  <label>Description</label>
+                  <label>Description (English)</label>
                   <textarea
                     className="textarea"
-                    value={formData.description}
+                    value={formData.descriptionEn}
                     onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, description: e.target.value }))
+                      setFormData((prev) => ({ ...prev, descriptionEn: e.target.value }))
                     }
+                    required
+                  />
+                </div>
+                <div className="form-group full">
+                  <label>Description (Arabic)</label>
+                  <textarea
+                    className="textarea"
+                    value={formData.descriptionAr}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, descriptionAr: e.target.value }))
+                    }
+                    dir="rtl"
                     required
                   />
                 </div>
@@ -330,6 +354,22 @@ const Products = () => {
                     }
                   />
                   <small>Upload a new cover image (optional)</small>
+                </div>
+                <div className="form-group">
+                  <label>Additional Images</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="input"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        additionalImages: e.target.files,
+                      }))
+                    }
+                  />
+                  <small>Upload multiple images</small>
                 </div>
                 <div className="form-group">
                   <label>Or image URL</label>

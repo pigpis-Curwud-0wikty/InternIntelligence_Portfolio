@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchProjectById, fetchProjects } from "../services/api";
 import { Github, ExternalLink, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -11,6 +13,8 @@ const ProductDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const { language } = useLanguage();
+    const { t } = useTranslation(language);
 
     useEffect(() => {
         const loadProductData = async () => {
@@ -62,7 +66,7 @@ const ProductDetail = () => {
         return (
             <div className="pt-32 pb-16 container mx-auto px-4">
                 <div className="flex justify-center items-center min-h-[60vh]">
-                    <div className="animate-pulse text-subtitle text-lg">Loading product details...</div>
+                    <div className="animate-pulse text-subtitle text-lg">{t('loading')}</div>
                 </div>
             </div>
         );
@@ -76,10 +80,10 @@ const ProductDetail = () => {
                     className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} />
-                    <span>Go Back</span>
+                    <span>{language === 'ar' ? 'رجوع' : 'Go Back'}</span>
                 </button>
                 <div className="flex justify-center items-center min-h-[60vh]">
-                    <p className="text-red-500 text-lg">{error || "Product not found"}</p>
+                    <p className="text-red-500 text-lg">{error || (language === 'ar' ? 'المنتج غير موجود' : 'Product not found')}</p>
                 </div>
             </div>
         );
@@ -93,14 +97,14 @@ const ProductDetail = () => {
             : ["https://via.placeholder.com/800x600"];
 
     return (
-        <div className="pt-32 pb-16 container mx-auto px-4">
+        <div className="mt-16 pb-16 container mx-auto px-4">
             {/* Back Button */}
             <button
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors mb-8"
             >
                 <ArrowLeft size={20} />
-                <span>Go Back</span>
+                <span>{language === 'ar' ? 'رجوع' : 'Go Back'}</span>
             </button>
 
             {/* Product Details */}
@@ -137,8 +141,8 @@ const ProductDetail = () => {
                                             key={index}
                                             onClick={() => setCurrentImageIndex(index)}
                                             className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
-                                                    ? "bg-accent w-8"
-                                                    : "bg-white/50 hover:bg-white/70"
+                                                ? "bg-accent w-8"
+                                                : "bg-white/50 hover:bg-white/70"
                                                 }`}
                                         />
                                     ))}
@@ -155,8 +159,8 @@ const ProductDetail = () => {
                                     key={index}
                                     onClick={() => setCurrentImageIndex(index)}
                                     className={`aspect-video rounded-lg overflow-hidden border-2 transition-all ${index === currentImageIndex
-                                            ? "border-accent"
-                                            : "border-border hover:border-accent/50"
+                                        ? "border-accent"
+                                        : "border-border hover:border-accent/50"
                                         }`}
                                 >
                                     <img
@@ -175,14 +179,18 @@ const ProductDetail = () => {
                     <div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">{product.title}</h1>
                         <p className="text-subtitle text-lg leading-relaxed">
-                            {product.description}
+                            {product.description?.en || product.description?.ar || product.description
+                                ? (language === 'ar'
+                                    ? (product.description?.ar || product.description)
+                                    : (product.description?.en || product.description))
+                                : ''}
                         </p>
                     </div>
 
                     {/* Tags */}
                     {product.tech && product.tech.length > 0 && (
                         <div>
-                            <h3 className="text-lg font-semibold mb-3">Technologies</h3>
+                            <h3 className="text-lg font-semibold mb-3">{t('technologies')}</h3>
                             <div className="flex flex-wrap gap-2">
                                 {product.tech.map((tag, index) => (
                                     <span
@@ -206,7 +214,7 @@ const ProductDetail = () => {
                                 className="flex items-center gap-2 px-6 py-3 bg-secondary border border-border hover:border-accent text-foreground rounded-full transition-all hover:scale-105"
                             >
                                 <Github size={20} />
-                                <span>View Code</span>
+                                <span>{t('viewCode')}</span>
                             </a>
                         )}
                         {product.demo && (
@@ -217,7 +225,7 @@ const ProductDetail = () => {
                                 className="flex items-center gap-2 px-6 py-3 bg-accent text-primary rounded-full transition-all hover:scale-105"
                             >
                                 <ExternalLink size={20} />
-                                <span>Live Demo</span>
+                                <span>{t('viewDemo')}</span>
                             </a>
                         )}
                     </div>
@@ -227,7 +235,9 @@ const ProductDetail = () => {
             {/* Related Products */}
             {relatedProducts.length > 0 && (
                 <div className="mt-20">
-                    <h2 className="text-3xl font-bold mb-8">More Projects</h2>
+                    <h2 className="text-3xl font-bold mb-8">
+                        {language === 'ar' ? 'المزيد من المشاريع' : 'More Projects'}
+                    </h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {relatedProducts.map((relatedProduct) => (
                             <Link
@@ -245,7 +255,11 @@ const ProductDetail = () => {
                                 <div className="p-6">
                                     <h3 className="text-xl font-bold mb-2">{relatedProduct.title}</h3>
                                     <p className="text-subtitle text-sm mb-4 line-clamp-2">
-                                        {relatedProduct.description}
+                                        {relatedProduct.description?.en || relatedProduct.description?.ar || relatedProduct.description
+                                            ? (language === 'ar'
+                                                ? (relatedProduct.description?.ar || relatedProduct.description)
+                                                : (relatedProduct.description?.en || relatedProduct.description))
+                                            : ''}
                                     </p>
                                     {relatedProduct.tech && relatedProduct.tech.length > 0 && (
                                         <div className="flex flex-wrap gap-2">

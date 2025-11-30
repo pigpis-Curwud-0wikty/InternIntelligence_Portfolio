@@ -1,21 +1,32 @@
 import { Quote } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const Testimonials = () => {
+    const { language } = useLanguage();
+    const { t } = useTranslation(language);
+
     const testimonials = [
         {
-            name: "Sarah Johnson",
-            role: "Marketing Director at TechCorp",
-            content: "Working with this designer was an absolute pleasure. They delivered a stunning website that perfectly captured our brand identity. Their attention to detail and creativity exceeded our expectations."
+            name: language === 'ar' ? 'سارة جونسون' : 'Sarah Johnson',
+            role: language === 'ar' ? 'مديرة التسويق في TechCorp' : 'Marketing Director at TechCorp',
+            content: language === 'ar'
+                ? 'كان العمل مع هذا المصمم متعة مطلقة. قدموا موقعاً مذهلاً يعكس هوية علامتنا التجارية بشكل مثالي. اهتمامهم بالتفاصيل وإبداعهم تجاوز توقعاتنا.'
+                : 'Working with this designer was an absolute pleasure. They delivered a stunning website that perfectly captured our brand identity. Their attention to detail and creativity exceeded our expectations.'
         },
         {
-            name: "Michael Chen",
-            role: "Founder at StartupX",
-            content: "I hired this freelancer for our logo design and brand identity. The results were outstanding! They took the time to understand our vision and translated it into a perfect visual representation of our brand."
+            name: language === 'ar' ? 'مايكل تشين' : 'Michael Chen',
+            role: language === 'ar' ? 'مؤسس StartupX' : 'Founder at StartupX',
+            content: language === 'ar'
+                ? 'استأجرت هذا المستقل لتصميم شعارنا وهوية العلامة التجارية. كانت النتائج رائعة! أخذوا الوقت لفهم رؤيتنا وترجموها إلى تمثيل مرئي مثالي لعلامتنا التجارية.'
+                : 'I hired this freelancer for our logo design and brand identity. The results were outstanding! They took the time to understand our vision and translated it into a perfect visual representation of our brand.'
         },
         {
-            name: "Emily Rodriguez",
-            role: "E-commerce Manager",
-            content: "Our online store needed a complete redesign, and this developer delivered beyond our expectations. The site is not only beautiful but also performs exceptionally well, leading to increased sales."
+            name: language === 'ar' ? 'إميلي رودريغيز' : 'Emily Rodriguez',
+            role: language === 'ar' ? 'مديرة التجارة الإلكترونية' : 'E-commerce Manager',
+            content: language === 'ar'
+                ? 'كان متجرنا الإلكتروني بحاجة إلى إعادة تصميم كاملة، وقدم هذا المطور أكثر من توقعاتنا. الموقع ليس جميلاً فحسب، بل يعمل بشكل استثنائي، مما أدى إلى زيادة المبيعات.'
+                : 'Our online store needed a complete redesign, and this developer delivered beyond our expectations. The site is not only beautiful but also performs exceptionally well, leading to increased sales.'
         }
     ];
 
@@ -23,9 +34,9 @@ const Testimonials = () => {
         <section className="py-16 bg-secondary/30">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col items-center text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Clients’ Testimonials</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('testimonials')}</h2>
                     <p className="text-subtitle max-w-2xl">
-                        What They Say
+                        {t('whatClientsSay')}
                     </p>
                 </div>
 

@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { fetchProjects } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { language } = useLanguage();
 
     useEffect(() => {
         const loadProjects = async () => {
@@ -87,26 +89,28 @@ const Projects = () => {
                                         />
                                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                                             {project.github && (
-                                                <a
-                                                    href={project.github}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={(e) => e.stopPropagation()}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        window.open(project.github, '_blank');
+                                                    }}
                                                     className="p-2 bg-white text-black rounded-full hover:bg-accent hover:text-primary transition-colors"
                                                 >
                                                     <Github size={20} />
-                                                </a>
+                                                </button>
                                             )}
                                             {project.demo && (
-                                                <a
-                                                    href={project.demo}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    onClick={(e) => e.stopPropagation()}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        window.open(project.demo, '_blank');
+                                                    }}
                                                     className="p-2 bg-white text-black rounded-full hover:bg-accent hover:text-primary transition-colors"
                                                 >
                                                     <ExternalLink size={20} />
-                                                </a>
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -114,7 +118,11 @@ const Projects = () => {
                                     <div className="p-6">
                                         <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                                         <p className="text-subtitle text-sm mb-4 line-clamp-2">
-                                            {project.description}
+                                            {project.description?.en || project.description?.ar || project.description
+                                                ? (language === 'ar'
+                                                    ? (project.description?.ar || project.description)
+                                                    : (project.description?.en || project.description))
+                                                : ''}
                                         </p>
                                         {project.tech && project.tech.length > 0 && (
                                             <div className="flex flex-wrap gap-2">
@@ -134,12 +142,12 @@ const Projects = () => {
                         </div>
 
                         <div className="text-center mt-12">
-                            <a
-                                href="/portfolio"
+                            <Link
+                                to="/portfolio"
                                 className="inline-block px-8 py-3 border border-accent text-accent font-medium rounded-full hover:bg-accent hover:text-primary transition-colors"
                             >
                                 View All Projects
-                            </a>
+                            </Link>
                         </div>
                     </>
                 )}

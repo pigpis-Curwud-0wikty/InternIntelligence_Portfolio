@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchSkills } from "../services/api";
+import { Link } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
-const Skills = () => {
+const Skills = ({ limit }) => {
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { language } = useLanguage();
+    const { t } = useTranslation(language);
 
     useEffect(() => {
         const loadSkills = async () => {
@@ -64,6 +69,8 @@ const Skills = () => {
         );
     }
 
+    const displayedSkills = limit ? skills.slice(0, limit) : skills;
+
     return (
         <section className="py-16">
             <div className="container mx-auto px-4">
@@ -81,30 +88,43 @@ const Skills = () => {
                         <p className="text-subtitle">No skills found.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {skills.map((skill) => (
-                            <div
-                                key={skill._id}
-                                className="p-6 bg-secondary border border-border rounded-xl hover:border-accent transition-colors group"
-                            >
-                                {skill.icon && (
-                                    <div className="mb-4 flex justify-center">
-                                        <img
-                                            src={skill.icon}
-                                            alt={skill.name}
-                                            className="w-12 h-12 object-contain"
-                                        />
-                                    </div>
-                                )}
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors text-center">
-                                    {skill.name}
-                                </h3>
-                                {skill.category && (
-                                    <p className="text-subtitle text-sm text-center">{skill.category}</p>
-                                )}
+                    <>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            {displayedSkills.map((skill) => (
+                                <div
+                                    key={skill._id}
+                                    className="p-6 bg-secondary border border-border rounded-xl hover:border-accent transition-colors group"
+                                >
+                                    {skill.icon && (
+                                        <div className="mb-4 flex justify-center">
+                                            <img
+                                                src={skill.icon}
+                                                alt={skill.name}
+                                                className="w-12 h-12 object-contain"
+                                            />
+                                        </div>
+                                    )}
+                                    <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors text-center">
+                                        {skill.name}
+                                    </h3>
+                                    {skill.category && (
+                                        <p className="text-subtitle text-sm text-center">{skill.category}</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {limit && skills.length > limit && (
+                            <div className="flex justify-center mt-12">
+                                <Link
+                                    to="/skills"
+                                    className="px-8 py-3 bg-primary border border-accent text-accent font-medium rounded-full hover:bg-accent hover:text-primary transition-all duration-300"
+                                >
+                                    {t('moreSkills')}
+                                </Link>
                             </div>
-                        ))}
-                    </div>
+                        )}
+                    </>
                 )}
             </div>
         </section>

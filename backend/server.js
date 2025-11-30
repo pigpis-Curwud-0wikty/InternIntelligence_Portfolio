@@ -55,11 +55,6 @@ app.use('/api/v1/analytics', analyticsRoutes);
 
 connectDB();
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on http://localhost:${process.env.PORT}`);
-  console.log(`API Documentation: http://localhost:${process.env.PORT}/api-docs`);
-});
-
 app.get('/', (req, res) => {
   res.send('Hello World');
 });

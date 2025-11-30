@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Mail, Send } from "lucide-react";
 import { sendMessage } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +12,8 @@ const Contact = () => {
     });
     const [status, setStatus] = useState({ type: "", message: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { language } = useLanguage();
+    const { t } = useTranslation(language);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,13 +32,17 @@ const Contact = () => {
             await sendMessage(formData);
             setStatus({
                 type: "success",
-                message: "Message sent successfully! I'll get back to you soon.",
+                message: language === 'ar'
+                    ? 'تم إرسال الرسالة بنجاح! سأرد عليك قريباً.'
+                    : "Message sent successfully! I'll get back to you soon.",
             });
             setFormData({ name: "", email: "", message: "" });
         } catch (error) {
             setStatus({
                 type: "error",
-                message: "Failed to send message. Please try again later.",
+                message: language === 'ar'
+                    ? 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى لاحقاً.'
+                    : "Failed to send message. Please try again later.",
             });
         } finally {
             setIsSubmitting(false);
@@ -46,18 +54,17 @@ const Contact = () => {
             <div className="container mx-auto px-4 max-w-4xl">
                 <div className="flex flex-col items-center text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center gap-2">
-                        <Mail className="text-accent" /> Let's Connect & Create Together
+                        <Mail className="text-accent" /> {t('letsConnect')}
                     </h2>
                     <p className="text-subtitle max-w-2xl mb-8">
-                        I'm always looking for opportunities to collaborate, learn, and create. Whether you have
-                        a project in mind or just want to connect, I'd love to hear from you!
+                        {t('ctaDescription')}
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium mb-2">
-                            Name
+                            {t('yourName')}
                         </label>
                         <input
                             type="text"
@@ -67,13 +74,13 @@ const Contact = () => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none focus:border-accent transition-colors text-foreground"
-                            placeholder="Your name"
+                            placeholder={language === 'ar' ? 'اسمك' : 'Your name'}
                         />
                     </div>
 
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium mb-2">
-                            Email
+                            {t('yourEmail')}
                         </label>
                         <input
                             type="email"
@@ -83,13 +90,13 @@ const Contact = () => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none focus:border-accent transition-colors text-foreground"
-                            placeholder="your.email@example.com"
+                            placeholder={language === 'ar' ? 'your.email@example.com' : 'your.email@example.com'}
                         />
                     </div>
 
                     <div>
                         <label htmlFor="message" className="block text-sm font-medium mb-2">
-                            Message
+                            {t('yourMessage')}
                         </label>
                         <textarea
                             id="message"
@@ -99,15 +106,15 @@ const Contact = () => {
                             required
                             rows="6"
                             className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none focus:border-accent transition-colors text-foreground resize-none"
-                            placeholder="Your message..."
+                            placeholder={language === 'ar' ? 'رسالتك...' : 'Your message...'}
                         />
                     </div>
 
                     {status.message && (
                         <div
                             className={`p-4 rounded-lg ${status.type === "success"
-                                    ? "bg-green-500/10 border border-green-500/50 text-green-500"
-                                    : "bg-red-500/10 border border-red-500/50 text-red-500"
+                                ? "bg-green-500/10 border border-green-500/50 text-green-500"
+                                : "bg-red-500/10 border border-red-500/50 text-red-500"
                                 }`}
                         >
                             {status.message}
@@ -122,11 +129,11 @@ const Contact = () => {
                         {isSubmitting ? (
                             <>
                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-                                Sending...
+                                {t('sending')}
                             </>
                         ) : (
                             <>
-                                <Send size={18} /> Send Message
+                                <Send size={18} /> {t('sendMessage')}
                             </>
                         )}
                     </button>
@@ -139,7 +146,7 @@ const Contact = () => {
                         rel="noopener noreferrer"
                         className="inline-block px-8 py-3 bg-transparent border border-border text-foreground font-medium rounded-full hover:bg-white/5 transition-colors"
                     >
-                        View My GitHub
+                        {t('viewGithub')}
                     </a>
                 </div>
             </div>

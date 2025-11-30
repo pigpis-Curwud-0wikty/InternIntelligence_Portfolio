@@ -10,11 +10,16 @@ import {
     Sun,
     Github,
     Linkedin,
-    Twitter
+    Twitter,
+    Languages
 } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const Sidebar = () => {
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+    const { language, toggleLanguage } = useLanguage();
+    const { t } = useTranslation(language);
     const location = useLocation();
 
     useEffect(() => {
@@ -32,17 +37,17 @@ const Sidebar = () => {
     };
 
     const navLinks = [
-        { name: "Home", path: "/", icon: <Home size={20} /> },
-        { name: "About", path: "/about", icon: <User size={20} /> },
-        { name: "Skills", path: "/skills", icon: <Code2 size={20} /> },
-        { name: "Portfolio", path: "/portfolio", icon: <Briefcase size={20} /> },
-        { name: "Contact", path: "/contact", icon: <Mail size={20} /> },
+        { name: t('home'), path: "/", icon: <Home size={20} /> },
+        { name: t('about'), path: "/about", icon: <User size={20} /> },
+        { name: t('skills'), path: "/skills", icon: <Code2 size={20} /> },
+        { name: t('portfolio'), path: "/portfolio", icon: <Briefcase size={20} /> },
+        { name: t('contact'), path: "/contact", icon: <Mail size={20} /> },
     ];
 
     return (
         <>
             {/* Desktop Sidebar */}
-            <aside className="hidden md:flex fixed left-0 top-0 h-screen w-20 lg:w-64 flex-col justify-between border-r border-border bg-secondary/50 backdrop-blur-md z-50 transition-all duration-300">
+            <aside className="hidden md:flex fixed start-0 top-0 h-screen w-20 lg:w-64 flex-col justify-between border-e border-border bg-secondary/50 backdrop-blur-md z-50 transition-all duration-300">
                 <div className="p-6 flex flex-col items-center">
                     <Link to="/" className="text-2xl font-bold text-foreground mb-8 hidden lg:block">
                         Ziad<span className="text-accent">Mohamed</span>
@@ -75,14 +80,11 @@ const Sidebar = () => {
 
                 <div className="p-6 flex flex-col gap-6 items-center">
                     <div className="flex gap-4 flex-col lg:flex-row lg:w-full justify-center">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-accent transition-colors">
+                        <a href="https://github.com/pigpis-Curwud-0wikty" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-accent transition-colors">
                             <Github size={20} />
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-accent transition-colors">
+                        <a href="https://linkedin.com/in/ziad-mohamed-dev" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-accent transition-colors">
                             <Linkedin size={20} />
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-accent transition-colors">
-                            <Twitter size={20} />
                         </a>
                     </div>
 
@@ -92,18 +94,28 @@ const Sidebar = () => {
                     >
                         {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                         <span className="hidden lg:block font-medium">
-                            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                            {theme === "dark" ? t('lightMode') : t('darkMode')}
                         </span>
                     </button>
 
-                    <p className="text-xs text-subtitle text-center lg:text-left hidden lg:block">
+                    <button
+                        onClick={toggleLanguage}
+                        className="p-3 rounded-xl bg-primary border border-border text-subtitle hover:text-foreground hover:border-accent transition-all w-full flex items-center justify-center gap-3"
+                    >
+                        <Languages size={20} />
+                        <span className="hidden lg:block font-medium">
+                            {language === 'en' ? 'العربية' : 'English'}
+                        </span>
+                    </button>
+
+                    <p className="text-xs text-subtitle text-center lg:text-start hidden lg:block">
                         © {new Date().getFullYear()} Ziad Mohamed
                     </p>
                 </div>
             </aside>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 w-full bg-secondary/90 backdrop-blur-lg border-t border-border z-50 px-6 py-4">
+            <nav className="md:hidden fixed bottom-0 start-0 w-full bg-secondary/90 backdrop-blur-lg border-t border-border z-50 px-6 py-4">
                 <ul className="flex justify-between items-center">
                     {navLinks.map((link) => (
                         <li key={link.name}>
@@ -121,11 +133,22 @@ const Sidebar = () => {
                     ))}
                     <li>
                         <button
+                            onClick={toggleLanguage}
+                            className="flex flex-col items-center gap-1 text-subtitle"
+                        >
+                            <Languages size={20} />
+                            <span className="text-[10px] font-medium">
+                                {language === 'en' ? 'عربي' : 'EN'}
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button
                             onClick={toggleTheme}
                             className="flex flex-col items-center gap-1 text-subtitle"
                         >
                             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-                            <span className="text-[10px] font-medium">Theme</span>
+                            <span className="text-[10px] font-medium">{t('theme')}</span>
                         </button>
                     </li>
                 </ul>

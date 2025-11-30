@@ -7,7 +7,8 @@ import './About.css';
 const initialForm = {
   name: '',
   role: '',
-  description: '',
+  descriptionEn: '',
+  descriptionAr: '',
   address: '',
   phone: '',
   email: '',
@@ -45,7 +46,8 @@ const About = () => {
     setFormData({
       name: entry.name,
       role: entry.role,
-      description: entry.description,
+      descriptionEn: entry.description?.en || entry.description || '',
+      descriptionAr: entry.description?.ar || '',
       address: entry.address || '',
       phone: entry.phone || '',
       email: entry.email || '',
@@ -66,10 +68,14 @@ const About = () => {
     setError('');
     try {
       const payload = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'profileImageFile' || key === 'profileImageUrl') return;
-        payload.append(key, value);
-      });
+      payload.append('name', formData.name);
+      payload.append('role', formData.role);
+      payload.append('descriptionEn', formData.descriptionEn);
+      payload.append('descriptionAr', formData.descriptionAr);
+      payload.append('address', formData.address);
+      payload.append('phone', formData.phone);
+      payload.append('email', formData.email);
+      payload.append('cvLink', formData.cvLink);
       if (formData.profileImageFile) {
         payload.append('profileImage', formData.profileImageFile);
       } else if (formData.profileImageUrl) {
@@ -152,13 +158,25 @@ const About = () => {
                 />
               </div>
               <div className="form-group full">
-                <label>Short bio</label>
+                <label>Short bio (English)</label>
                 <textarea
                   className="textarea"
-                  value={formData.description}
+                  value={formData.descriptionEn}
                   onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, description: e.target.value }))
+                    setFormData((prev) => ({ ...prev, descriptionEn: e.target.value }))
                   }
+                  required
+                />
+              </div>
+              <div className="form-group full">
+                <label>Short bio (Arabic)</label>
+                <textarea
+                  className="textarea"
+                  value={formData.descriptionAr}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, descriptionAr: e.target.value }))
+                  }
+                  dir="rtl"
                   required
                 />
               </div>
@@ -248,7 +266,10 @@ const About = () => {
                   <div className="about-card__body">
                     <h3>{entry.name}</h3>
                     <p className="role">{entry.role}</p>
-                    <p className="description">{entry.description}</p>
+                    <p className="description">{entry.description?.en || entry.description}</p>
+                    {entry.description?.ar && (
+                      <p className="description" dir="rtl">{entry.description.ar}</p>
+                    )}
                     <div className="about-meta">
                       {entry.email && <span>{entry.email}</span>}
                       {entry.phone && <span>{entry.phone}</span>}

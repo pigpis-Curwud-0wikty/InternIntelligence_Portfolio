@@ -9,15 +9,13 @@ const Footer = () => {
                 </p>
 
                 <div className="flex items-center gap-6">
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-blue transition-colors">
+                    <a href="https://github.com/pigpis-Curwud-0wikty" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-blue transition-colors">
                         <Github size={20} />
                     </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-blue transition-colors">
+                    <a href="https://linkedin.com/in/ziad-mohamed-dev" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-blue transition-colors">
                         <Linkedin size={20} />
                     </a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-subtitle hover:text-blue transition-colors">
-                        <Twitter size={20} />
-                    </a>
+
                 </div>
             </div>
         </footer>

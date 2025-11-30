@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchProjects } from "../services/api";
 import { Code, Palette, Lightbulb } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "../shared/translations";
 
 const Portfolio = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { language } = useLanguage();
+  const { t } = useTranslation(language);
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -30,30 +34,44 @@ const Portfolio = () => {
   const developmentFocus = [
     {
       icon: <Code className="text-blue-500" size={32} />,
-      title: "Frontend Development",
-      description: "Building responsive, accessible, and visually appealing user interfaces using modern web technologies.",
+      title: language === 'ar' ? 'تطوير الواجهة الأمامية' : 'Frontend Development',
+      description: language === 'ar'
+        ? 'بناء واجهات مستخدم متجاوبة وسهلة الوصول وجذابة بصرياً باستخدام تقنيات الويب الحديثة.'
+        : 'Building responsive, accessible, and visually appealing user interfaces using modern web technologies.',
       tags: ["React", "Next.js", "Tailwind CSS"]
     },
     {
       icon: <Palette className="text-purple-500" size={32} />,
-      title: "UI/UX Principles",
-      description: "Learning to create intuitive user experiences with thoughtful design patterns and accessibility in mind.",
-      tags: ["Responsive Design", "Accessibility", "User Centered Design"]
+      title: language === 'ar' ? 'مبادئ UI/UX' : 'UI/UX Principles',
+      description: language === 'ar'
+        ? 'التعلم لإنشاء تجارب مستخدم بديهية مع أنماط تصميم مدروسة وإمكانية الوصول في الاعتبار.'
+        : 'Learning to create intuitive user experiences with thoughtful design patterns and accessibility in mind.',
+      tags: [
+        language === 'ar' ? 'التصميم المتجاوب' : 'Responsive Design',
+        language === 'ar' ? 'إمكانية الوصول' : 'Accessibility',
+        language === 'ar' ? 'التصميم المتمحور حول المستخدم' : 'User Centered Design'
+      ]
     },
     {
       icon: <Lightbulb className="text-pink-500" size={32} />,
-      title: "Problem Solving",
-      description: "Developing my analytical thinking and debugging skills to tackle complex coding challenges effectively.",
-      tags: ["Algorithms", "Data Structures", "Debugging"]
+      title: language === 'ar' ? 'حل المشكلات' : 'Problem Solving',
+      description: language === 'ar'
+        ? 'تطوير مهارات التفكير التحليلي وتصحيح الأخطاء لمعالجة تحديات البرمجة المعقدة بفعالية.'
+        : 'Developing my analytical thinking and debugging skills to tackle complex coding challenges effectively.',
+      tags: [
+        language === 'ar' ? 'الخوارزميات' : 'Algorithms',
+        language === 'ar' ? 'هياكل البيانات' : 'Data Structures',
+        language === 'ar' ? 'تصحيح الأخطاء' : 'Debugging'
+      ]
     }
   ];
 
   if (loading) {
     return (
       <div className="pt-32 pb-16 container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8">Portfolio</h1>
+        <h1 className="text-4xl font-bold mb-8">{t('portfolio')}</h1>
         <div className="flex justify-center">
-          <div className="animate-pulse text-subtitle">Loading projects...</div>
+          <div className="animate-pulse text-subtitle">{t('loading')}</div>
         </div>
       </div>
     );
@@ -62,7 +80,7 @@ const Portfolio = () => {
   if (error) {
     return (
       <div className="pt-32 pb-16 container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8">Portfolio</h1>
+        <h1 className="text-4xl font-bold mb-8">{t('portfolio')}</h1>
         <div className="flex justify-center">
           <p className="text-red-500">{error}</p>
         </div>
@@ -74,18 +92,20 @@ const Portfolio = () => {
     <div className="mt-16 pb-16 container mx-auto px-4">
       <div className="mb-16 text-center">
         <p className="text-subtitle text-lg mb-4">
-          Explore all my projects and work
+          {language === 'ar' ? 'استكشف جميع مشاريعي وأعمالي' : 'Explore all my projects and work'}
         </p>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Portfolio</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('portfolio')}</h1>
       </div>
 
       {/* Development Focus Section */}
       <section className="mb-16">
         <div className="text-center mb-8">
           <p className="text-subtitle text-sm font-semibold uppercase tracking-wide mb-2">
-            What I'm Currently Improving My
+            {language === 'ar' ? 'ما أعمل على تحسينه حالياً' : "What I'm Currently Improving My"}
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold">Development Focus</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">
+            {language === 'ar' ? 'تركيز التطوير' : 'Development Focus'}
+          </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -120,14 +140,14 @@ const Portfolio = () => {
       <section>
         <div className="text-center mb-8">
           <p className="text-subtitle text-sm uppercase tracking-wide mb-2">
-            My Recent Work
+            {language === 'ar' ? 'أعمالي الأخيرة' : 'My Recent Work'}
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold">Projects</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">{t('myProjects')}</h2>
         </div>
 
         {projects.length === 0 ? (
           <div className="flex justify-center">
-            <p className="text-subtitle">No projects found.</p>
+            <p className="text-subtitle">{t('noData')}</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -151,7 +171,11 @@ const Portfolio = () => {
                     {project.title}
                   </h3>
                   <p className="text-subtitle text-sm mb-4 line-clamp-3">
-                    {project.description}
+                    {project.description?.en || project.description?.ar || project.description
+                      ? (language === 'ar'
+                        ? (project.description?.ar || project.description)
+                        : (project.description?.en || project.description))
+                      : ''}
                   </p>
                   {project.tech && project.tech.length > 0 && (
                     <div className="flex flex-wrap gap-2">

@@ -39,15 +39,26 @@ router.get("/:id", async (req, res) => {
 // Protected: create new entry
 router.post("/", checkAuth, upload.single("profileImage"), async (req, res) => {
   try {
-    const { name, role, description, address, phone, email, cvLink } = req.body;
+    const { name, role, descriptionEn, descriptionAr, address, phone, email, cvLink } = req.body;
 
-    if (!name || !role || !description) {
+    if (!name || !role || !descriptionEn || !descriptionAr) {
       return res
         .status(400)
-        .json({ message: "Name, role and description are required" });
+        .json({ message: "Name, role and descriptions (EN & AR) are required" });
     }
 
-    const payload = { name, role, description, address, phone, email, cvLink };
+    const payload = {
+      name,
+      role,
+      description: {
+        en: descriptionEn,
+        ar: descriptionAr
+      },
+      address,
+      phone,
+      email,
+      cvLink
+    };
 
     if (req.file) {
       const uploadResult = await cloudinary.uploader.upload(req.file.path, {
@@ -84,7 +95,6 @@ router.put(
       const updatableFields = [
         "name",
         "role",
-        "description",
         "address",
         "phone",
         "email",
@@ -96,6 +106,9 @@ router.put(
           about[field] = req.body[field];
         }
       });
+
+      if (req.body.descriptionEn) about.description.en = req.body.descriptionEn;
+      if (req.body.descriptionAr) about.description.ar = req.body.descriptionAr;
 
       if (req.file) {
         const uploadResult = await cloudinary.uploader.upload(req.file.path, {

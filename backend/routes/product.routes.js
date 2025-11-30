@@ -58,32 +58,46 @@ router.get("/:id", async (req, res) => {
 });
 
 // Protected: create product
-router.post("/", checkAuth, upload.single("image"), async (req, res) => {
+router.post("/", checkAuth, upload.fields([{ name: "image", maxCount: 1 }, { name: "additionalImages", maxCount: 5 }]), async (req, res) => {
   try {
-    const { title, description, tech, github, demo, featured } = req.body;
+    const { title, descriptionEn, descriptionAr, tech, github, demo, featured } = req.body;
 
-    if (!title || !description) {
+    if (!title || !descriptionEn || !descriptionAr) {
       return res
         .status(400)
-        .json({ message: "Title and description are required" });
+        .json({ message: "Title and descriptions (EN & AR) are required" });
     }
 
     const payload = {
       title,
-      description,
+      description: {
+        en: descriptionEn,
+        ar: descriptionAr
+      },
       github,
       demo,
       featured: typeof featured === "string" ? featured === "true" : !!featured,
       tech: parseTechStack(tech),
+      images: []
     };
 
-    if (req.file) {
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+    // Handle Main Image
+    if (req.files && req.files["image"]) {
+      const uploadResult = await cloudinary.uploader.upload(req.files["image"][0].path, {
         folder: "products",
       });
       payload.image = uploadResult.secure_url;
     } else if (req.body.image) {
       payload.image = req.body.image;
+    }
+
+    // Handle Additional Images
+    if (req.files && req.files["additionalImages"]) {
+      const uploadPromises = req.files["additionalImages"].map(file =>
+        cloudinary.uploader.upload(file.path, { folder: "products" })
+      );
+      const results = await Promise.all(uploadPromises);
+      payload.images = results.map(result => result.secure_url);
     }
 
     if (!payload.image) {
@@ -104,7 +118,7 @@ router.post("/", checkAuth, upload.single("image"), async (req, res) => {
 router.put(
   "/:id",
   checkAuth,
-  upload.single("image"),
+  upload.fields([{ name: "image", maxCount: 1 }, { name: "additionalImages", maxCount: 5 }]),
   async (req, res) => {
     try {
       const product = await Product.findById(req.params.id);
@@ -113,13 +127,16 @@ router.put(
         return res.status(404).json({ message: "Product not found" });
       }
 
-      const updatableFields = ["title", "description", "github", "demo"];
+      const updatableFields = ["title", "github", "demo"];
 
       updatableFields.forEach((field) => {
         if (typeof req.body[field] !== "undefined") {
           product[field] = req.body[field];
         }
       });
+
+      if (req.body.descriptionEn) product.description.en = req.body.descriptionEn;
+      if (req.body.descriptionAr) product.description.ar = req.body.descriptionAr;
 
       if (typeof req.body.featured !== "undefined") {
         product.featured =
@@ -132,13 +149,24 @@ router.put(
         product.tech = parseTechStack(req.body.tech);
       }
 
-      if (req.file) {
-        const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      // Handle Main Image Update
+      if (req.files && req.files["image"]) {
+        const uploadResult = await cloudinary.uploader.upload(req.files["image"][0].path, {
           folder: "products",
         });
         product.image = uploadResult.secure_url;
       } else if (typeof req.body.image !== "undefined") {
         product.image = req.body.image;
+      }
+
+      // Handle Additional Images Update (Append or Replace logic - here we append)
+      if (req.files && req.files["additionalImages"]) {
+        const uploadPromises = req.files["additionalImages"].map(file =>
+          cloudinary.uploader.upload(file.path, { folder: "products" })
+        );
+        const results = await Promise.all(uploadPromises);
+        const newImages = results.map(result => result.secure_url);
+        product.images = [...(product.images || []), ...newImages];
       }
 
       const updatedProduct = await product.save();
