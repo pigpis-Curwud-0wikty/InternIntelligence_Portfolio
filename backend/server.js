@@ -34,11 +34,12 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, { explorer: true })
-);
+app.use("/api-docs", (req, res, next) => {
+  swaggerUi.serve(req, res, () => {
+    return swaggerUi.setup(swaggerSpec, { explorer: true })(req, res, next);
+  });
+});
+
 
 app.get("/api-docs.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
