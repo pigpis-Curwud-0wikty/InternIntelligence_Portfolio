@@ -29,8 +29,10 @@ app.use(cors({
 }));
 
 // Swagger Configuration for Vercel
-app.use("/api-docs", swaggerUi.serve);
-app.get("/api-docs", swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "InternIntelligence API Docs"
+}));
 app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
 
 app.use('/api/v1/user', userRoutes);
