@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+const API_BASE_URL = 'https://intern-intelligence-portfolio-eosin.vercel.app/api/v1';
 
 /**
  * Fetch all skills from the backend
