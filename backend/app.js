@@ -6,7 +6,6 @@ const aboutRoutes = require("./routes/about.routes.js");
 const productRoutes = require("./routes/product.routes.js");
 const messageRoutes = require("./routes/message.routes.js");
 const analyticsRoutes = require("./routes/analytics.routes.js");
-const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -29,11 +28,53 @@ app.use(cors({
 }));
 
 // Swagger Configuration for Vercel
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: "InternIntelligence API Docs"
-}));
-app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
+// Serve Swagger spec as JSON
+app.get("/api-docs.json", (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.json(swaggerSpec);
+});
+
+// Serve Swagger UI HTML page
+app.get("/api-docs", (req, res) => {
+    const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>InternIntelligence API Docs</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui.css">
+        <style>
+            body { margin: 0; padding: 0; }
+            .swagger-ui .topbar { display: none; }
+        </style>
+    </head>
+    <body>
+        <div id="swagger-ui"></div>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui-bundle.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui-standalone-preset.js"></script>
+        <script>
+            window.onload = function() {
+                SwaggerUIBundle({
+                    url: "/api-docs.json",
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: "StandaloneLayout"
+                });
+            };
+        </script>
+    </body>
+    </html>
+    `;
+    res.send(html);
+});
 
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/skill', skillRoutes);
