@@ -5,7 +5,13 @@ const API_BASE_URL = 'https://intern-intelligence-portfolio-eosin.vercel.app/api
  */
 export const fetchSkills = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/skill`);
+        const response = await fetch(`${API_BASE_URL}/skill`, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -22,7 +28,13 @@ export const fetchSkills = async () => {
  */
 export const fetchProjects = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/product`);
+        const response = await fetch(`${API_BASE_URL}/product`, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -39,7 +51,13 @@ export const fetchProjects = async () => {
  */
 export const fetchAbout = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/about`);
+        const response = await fetch(`${API_BASE_URL}/about`, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

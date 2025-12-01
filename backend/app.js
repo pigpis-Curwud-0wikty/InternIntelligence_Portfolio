@@ -25,7 +25,7 @@ const allowedOrigins = [
 
 // Temporarily allow all origins to bypass Vercel CDN caching
 app.use(cors({
-    origin: true, // Allow all origins temporarily
+    origin: allowedOrigins, // Allow all origins temporarily
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -89,7 +89,16 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/message', messageRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 
-connectDB();
+// Connect to database before handling requests
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('Database connection error:', error);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+});
 
 app.get('/', (req, res) => {
     res.send('Hello World');
