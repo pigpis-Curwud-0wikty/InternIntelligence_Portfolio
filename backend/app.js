@@ -24,11 +24,12 @@ const allowedOrigins = [
 ];
 
 // Temporarily allow all origins to bypass Vercel CDN caching
+// Temporarily allow all origins to bypass Vercel CDN caching
 app.use(cors({
     origin: allowedOrigins, // Allow all origins temporarily
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma'],
     exposedHeaders: ['Content-Range', 'X-Content-Range'],
     maxAge: 600
 }));
