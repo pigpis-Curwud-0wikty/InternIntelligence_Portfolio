@@ -1,5 +1,5 @@
 const express = require('express');
-const connectDB = require('./config/db');
+
 const userRoutes = require("./routes/user.routes.js");
 const skillRoutes = require("./routes/skill.routes.js");
 const aboutRoutes = require("./routes/about.routes.js");
@@ -19,14 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "http://localhost:5175",
-    "https://intern-intelligence-portfolio-eosin.vercel.app"
+    "http://localhost:5175"
 ];
 
-// Temporarily allow all origins to bypass Vercel CDN caching
-// Temporarily allow all origins to bypass Vercel CDN caching
+// CORS configuration
 app.use(cors({
-    origin: allowedOrigins, // Allow all origins temporarily
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma'],
@@ -34,7 +32,7 @@ app.use(cors({
     maxAge: 600
 }));
 
-// Swagger Configuration for Vercel
+// Swagger Configuration
 // Serve Swagger spec as JSON
 app.get("/api-docs.json", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -90,24 +88,7 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/message', messageRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 
-// Connect to database before handling requests
-app.use(async (req, res, next) => {
-    // Skip database connection for OPTIONS requests (CORS preflight)
-    if (req.method === 'OPTIONS') {
-        return next();
-    }
 
-    try {
-        await connectDB();
-        next();
-    } catch (error) {
-        console.error('Database connection error:', error);
-        res.status(500).json({
-            error: 'Database connection failed',
-            details: error.message
-        });
-    }
-});
 
 app.get('/', (req, res) => {
     res.send('Hello World');
