@@ -92,12 +92,20 @@ app.use('/api/v1/analytics', analyticsRoutes);
 
 // Connect to database before handling requests
 app.use(async (req, res, next) => {
+    // Skip database connection for OPTIONS requests (CORS preflight)
+    if (req.method === 'OPTIONS') {
+        return next();
+    }
+
     try {
         await connectDB();
         next();
     } catch (error) {
         console.error('Database connection error:', error);
-        res.status(500).json({ error: 'Database connection failed' });
+        res.status(500).json({
+            error: 'Database connection failed',
+            details: error.message
+        });
     }
 });
 
