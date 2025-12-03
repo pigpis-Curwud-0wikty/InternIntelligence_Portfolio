@@ -1,28 +1,35 @@
 const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
 
+// Routes
 const userRoutes = require("./routes/user.routes.js");
 const skillRoutes = require("./routes/skill.routes.js");
 const aboutRoutes = require("./routes/about.routes.js");
 const productRoutes = require("./routes/product.routes.js");
 const messageRoutes = require("./routes/message.routes.js");
 const analyticsRoutes = require("./routes/analytics.routes.js");
+
+// Swagger
 const swaggerSpec = require("./swagger");
-const dotenv = require('dotenv');
-const cors = require('cors');
+
+// Load environment variables
 dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// CORS configuration
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "http://localhost:5175"
+    "http://localhost:5175",
+    "https://intern-intelligence-portfolio-eosin.vercel.app"
 ];
 
-// CORS configuration
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
@@ -33,13 +40,11 @@ app.use(cors({
 }));
 
 // Swagger Configuration
-// Serve Swagger spec as JSON
 app.get("/api-docs.json", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.json(swaggerSpec);
 });
 
-// Serve Swagger UI HTML page
 app.get("/api-docs", (req, res) => {
     const html = `
     <!DOCTYPE html>
@@ -81,6 +86,7 @@ app.get("/api-docs", (req, res) => {
     res.send(html);
 });
 
+// API Routes
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/skill', skillRoutes);
 app.use('/api/v1/about', aboutRoutes);
@@ -88,10 +94,9 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/message', messageRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 
-
-
+// Root route (يجب أن يكون متاحًا للـ Health Check)
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Server is running');
 });
 
 module.exports = app;

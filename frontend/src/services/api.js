@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://winter-water-5801.fly.dev/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
 
 /**
  * Fetch all skills from the backend
