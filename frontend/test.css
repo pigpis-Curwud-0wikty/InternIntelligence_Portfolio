@@ -857,6 +857,10 @@ body {
   overflow: hidden;
 }
 
+/* .overflow-hidden {
+  overflow: hidden;
+} */
+
 .rounded-full {
   border-radius: 9999px;
 }
