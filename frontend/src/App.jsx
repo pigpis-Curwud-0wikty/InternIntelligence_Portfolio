@@ -32,7 +32,7 @@ function App() {
           v7_relativeSplatPath: true,
         }}
       >
-        <div className="bg-primary min-h-screen flex text-foreground transition-colors duration-300">
+        <div className="bg-primary bg-grid-pattern min-h-screen flex text-foreground transition-colors duration-300">
           <Sidebar />
           <main className="flex-grow md:ms-20 lg:ms-64 pb-20 md:pb-0 transition-all duration-300">
             <Routes>
